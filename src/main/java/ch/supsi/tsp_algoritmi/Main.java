@@ -9,7 +9,7 @@ public class Main {
         System.out.println();
 
         ClassLoader classLoader = new Main().getClass().getClassLoader();
-        File file = new File(classLoader.getResource("eil76.tsp").getFile()) ;
+        File file = new File(classLoader.getResource("ch130.tsp").getFile()) ;
 
         List<City> cityList = TSPParser.parse(file);
 
@@ -19,5 +19,9 @@ public class Main {
         int[][] distanceMatrix = City.getDistanceMatrix(cityList);
 
         City.printDistanceMatrix(cityList, distanceMatrix);
+
+        System.out.println(distanceMatrix[86][11]);
+
+        System.out.println(NearestNeighbor.computeNearest(cityList, distanceMatrix));
     }
 }

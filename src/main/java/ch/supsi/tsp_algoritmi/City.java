@@ -1,6 +1,7 @@
 package ch.supsi.tsp_algoritmi;
 
 import java.util.List;
+import java.util.Objects;
 
 public class City {
     private int id;
@@ -8,7 +9,7 @@ public class City {
     private double y;
 
     public City(int id, double x, double y) {
-        this.id = id;
+        this.id = id-1;
         this.x = x;
         this.y = y;
     }
@@ -29,7 +30,7 @@ public class City {
         double x = Math.abs(city2.getX() - city1.getX());
         double y = Math.abs(city2.getY() - city1.getY());
 
-        return ((int) Math.hypot(x, y));
+        return ((int) (Math.hypot(x, y) + 0.5));
     }
 
     public static int[][] getDistanceMatrix(List<City> cityList){
@@ -63,12 +64,25 @@ public class City {
         for (int i = 0; i < cityList.size(); i++) {
             System.out.print("\n");
             System.out.print(cityList.get(i).getId() + "\t");
-            for (int j = 0; j <= i; j++) {
+            for (int j = 0; j < cityList.size(); j++) {
                 System.out.printf("%s\t", distanceMatrix[i][j]);
             }
         }
 
         System.out.println();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        City city = (City) o;
+        return id == city.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     @Override
