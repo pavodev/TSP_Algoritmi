@@ -8,20 +8,24 @@ public class Main {
         System.out.println("TSP_ALGORITMI PROJECT");
         System.out.println();
 
+        //Read the file & load the data into a list of cities
         ClassLoader classLoader = new Main().getClass().getClassLoader();
         File file = new File(classLoader.getResource("ch130.tsp").getFile()) ;
 
         List<City> cityList = TSPParser.parse(file);
 
-//        for(City city: cityList)
-//            System.out.println(city);
-
+        //compute the distanceMatrix;
         int[][] distanceMatrix = City.getDistanceMatrix(cityList);
 
-        City.printDistanceMatrix(cityList, distanceMatrix);
+        //compute a valid route with the Nearest Neighbor algorithm:
+        List<City> nearestRoute = NearestNeighbor.computeNearest(cityList, distanceMatrix);
 
-        System.out.println(distanceMatrix[86][11]);
+        //compute the 2-Opt structural algorithm to reorder the route:
+        List<City> nearestPlusTwoOptRoute = TwoOpt.twoOpt(nearestRoute);
 
-        System.out.println(NearestNeighbor.computeNearest(cityList, distanceMatrix));
+        //show the error in percent:
+        TSPParser.printPercentError(City.getRouteDistance(nearestRoute));
+        TSPParser.printPercentError(City.getRouteDistance(nearestPlusTwoOptRoute));
+
     }
 }

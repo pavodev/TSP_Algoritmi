@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TSPParser {
+    private static double bestKnown;
 
     public static List<City> parse(File tspFile) {
         if(tspFile == null)
@@ -18,9 +19,14 @@ public class TSPParser {
             String line;
             line = in.readLine();
 
+            while(!(line.contains("BEST"))){
+                line = in.readLine();
+            }
+
+            bestKnown = Double.parseDouble(line.split(" ")[2]);
 
             while(!(line.split(" ")[0].equals("1"))){
-                System.out.println(line = in.readLine());
+                line = in.readLine();
             }
 
             while(!line.equals("EOF")){
@@ -40,8 +46,12 @@ public class TSPParser {
             e.printStackTrace();
         }
 
-
-
         return cities;
+    }
+
+    public static void printPercentError(double computedDistance){
+        double error = (Math.abs(bestKnown-computedDistance)/bestKnown) * 100.0;
+
+        System.out.println("Error(%): " + error);
     }
 }

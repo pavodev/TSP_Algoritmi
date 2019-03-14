@@ -15,7 +15,8 @@ public class NearestNeighbor {
     Returns:
         - the totalDistance
      */
-    public static int computeNearest(List<City> cities, int[][] distanceMatrix) {
+    public static List<City> computeNearest(List<City> cities, int[][] distanceMatrix) {
+        System.out.println("\n************************* NEAREST NEIGHBOR ALGORITHM *************************");
 
         int totalDistance = 0;
 
@@ -24,7 +25,7 @@ public class NearestNeighbor {
         int index = 0;
 
         int newMinIndex = 0;
-        int current = 56;
+        int current = 0;
         int min = Integer.MAX_VALUE;
 
         //add the initial city to the visited cities list
@@ -37,7 +38,6 @@ public class NearestNeighbor {
                     min = distanceMatrix[current][i];
                 }
             }
-            System.out.print(newMinIndex+ " --> ");
             totalDistance += min; //update the total distance
 
             current = newMinIndex;
@@ -49,13 +49,14 @@ public class NearestNeighbor {
 
         //add the final distance between the start city and the last city to complete the cycle
         City firstCity = visitedCities.get(0);
-        System.out.println(firstCity.getId());
         City lastCity = visitedCities.get(cities.size()-1);
-        System.out.println(lastCity.getId());
 
         totalDistance += City.getDistance(firstCity, lastCity);
 
-        return totalDistance;
+        System.out.println("Total distance: " + totalDistance);
+        System.out.println("******************************************************************************\n");
+
+        return visitedCities;
     }
 
 }

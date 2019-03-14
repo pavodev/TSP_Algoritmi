@@ -33,6 +33,23 @@ public class City {
         return ((int) (Math.hypot(x, y) + 0.5));
     }
 
+    public static int getRouteDistance(List<City> route){
+        int totalDistance = 0;
+        int j;
+
+        for(int i = 0; i<route.size(); i++){
+            j = i+1;
+            if(j == route.size()) {
+                totalDistance += getDistance(route.get(0), route.get(route.size() - 1));
+                break;
+            }
+
+            totalDistance += getDistance(route.get(i), route.get(j));
+        }
+
+        return totalDistance;
+    }
+
     public static int[][] getDistanceMatrix(List<City> cityList){
         int[][] distanceMatrix = new int[cityList.size()][cityList.size()];
 
