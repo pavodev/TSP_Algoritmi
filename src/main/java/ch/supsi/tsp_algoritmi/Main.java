@@ -18,18 +18,15 @@ public class Main {
         int[][] distanceMatrix = City.getDistanceMatrix(cityList);
 
         City.printDistanceMatrix(cityList, distanceMatrix);
-        System.out.println(distanceMatrix[40][38] + ", " + distanceMatrix[40][49]);
+        //System.out.println(distanceMatrix[40][38] + ", " + distanceMatrix[40][49]);
         //compute a valid route with the Nearest Neighbor algorithm:
         List<City> nearestRoute = NearestNeighbor.computeNearest(cityList, distanceMatrix);
 
         //compute the 2-Opt structural algorithm to reorder the route:
-        List<City> nearestPlusTwoOptRoute = TwoOpt.twoOpt(nearestRoute);
+        City[] nearestPlusTwoOptRoute = TwoOpt.twoOpt(nearestRoute, distanceMatrix);
 
         //show the error in percent:
         TSPParser.printPercentError(City.getRouteDistance(nearestRoute));
-        TSPParser.printPercentError(City.getRouteDistance(nearestPlusTwoOptRoute));
-
-//        System.out.println(nearestRoute);
-//        System.out.println(nearestPlusTwoOptRoute);
+        TSPParser.printPercentError(City.getRouteDistanceArray(nearestPlusTwoOptRoute));
     }
 }

@@ -50,6 +50,23 @@ public class City {
         return totalDistance;
     }
 
+    public static int getRouteDistanceArray(City[] route){
+        int totalDistance = 0;
+        int j;
+
+        for(int i = 0; i<route.length; i++){
+            j = i+1;
+            if(j == route.length) {
+                totalDistance += getDistance(route[0], route[route.length - 1]);
+                break;
+            }
+
+            totalDistance += getDistance(route[i], route[j]);
+        }
+
+        return totalDistance;
+    }
+
     public static int[][] getDistanceMatrix(List<City> cityList){
         int[][] distanceMatrix = new int[cityList.size()][cityList.size()];
 
