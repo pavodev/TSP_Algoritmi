@@ -89,8 +89,8 @@ public class City {
 
         System.out.printf("%s\t","");
 
-        for (int j = 0; j < cityList.size(); j++) {
-            System.out.printf("%s\t", cityList.get(j).getId());
+        for (City city : cityList) {
+            System.out.printf("%s\t", city.getId());
         }
 
         System.out.println();
@@ -104,6 +104,12 @@ public class City {
         }
 
         System.out.println();
+    }
+
+    public static void printArrayOfCities(City[] cities) {
+        for (City city : cities) {
+            System.out.print(city.id + ", ");
+        }
     }
 
     @Override

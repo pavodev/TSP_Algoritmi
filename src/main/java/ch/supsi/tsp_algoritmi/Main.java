@@ -17,16 +17,16 @@ public class Main {
         //compute the distanceMatrix;
         int[][] distanceMatrix = City.getDistanceMatrix(cityList);
 
-        City.printDistanceMatrix(cityList, distanceMatrix);
-        //System.out.println(distanceMatrix[40][38] + ", " + distanceMatrix[40][49]);
         //compute a valid route with the Nearest Neighbor algorithm:
-        List<City> nearestRoute = NearestNeighbor.computeNearest(cityList, distanceMatrix);
+        City[] nearestRoute = NearestNeighbor.computeNearest(cityList, distanceMatrix);
 
         //compute the 2-Opt structural algorithm to reorder the route:
         City[] nearestPlusTwoOptRoute = TwoOpt.twoOpt(nearestRoute, distanceMatrix);
 
+        //compute the Simulated Annealing algorithm to try to find the optimal solution
+
         //show the error in percent:
-        TSPParser.printPercentError(City.getRouteDistance(nearestRoute));
+        TSPParser.printPercentError(City.getRouteDistanceArray(nearestRoute));
         TSPParser.printPercentError(City.getRouteDistanceArray(nearestPlusTwoOptRoute));
     }
 }
