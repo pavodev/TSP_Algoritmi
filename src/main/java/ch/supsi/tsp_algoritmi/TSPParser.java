@@ -11,7 +11,8 @@ public class TSPParser {
         if(tspFile == null)
             return null;
 
-        List<City> cities = new ArrayList<City>();
+        System.out.println(tspFile.getName());
+        List<City> cities = new ArrayList<>();
 
         try {
 
@@ -24,6 +25,7 @@ public class TSPParser {
             }
 
             bestKnown = Double.parseDouble(line.split(" ")[2]);
+            System.out.println("Best known: " + bestKnown);
 
             while(!(line.split(" ")[0].equals("1"))){
                 line = in.readLine();

@@ -104,6 +104,6 @@ public class City {
 
     @Override
     public String toString() {
-        return "ID = " + this.getId() + " / x = " + this.getX() + " / y = " + this.getY();
+        return " " + this.getId();
     }
 }
