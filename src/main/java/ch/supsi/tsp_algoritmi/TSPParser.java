@@ -15,6 +15,7 @@ public class TSPParser {
         List<City> cities = new ArrayList<>();
 
         try {
+            String regex = "^\\s+";
 
             BufferedReader in = new BufferedReader(new FileReader(tspFile));
             String line;
@@ -29,13 +30,16 @@ public class TSPParser {
 
             while(!(line.split(" ")[0].equals("1"))){
                 line = in.readLine();
+                line = line.replaceAll(regex, "");
             }
 
             while(!line.equals("EOF")){
+                line = line.replaceAll(regex, "");
+                String[] elements = line.split(" ");
                 cities.add(new City(
-                                Integer.parseInt(line.split(" ")[0]),
-                                Double.parseDouble(line.split(" ")[1]),
-                                Double.parseDouble(line.split(" ")[2])
+                                Integer.parseInt(elements[0]),
+                                Double.parseDouble(elements[1]),
+                                Double.parseDouble(elements[2])
                         )
                 );
 

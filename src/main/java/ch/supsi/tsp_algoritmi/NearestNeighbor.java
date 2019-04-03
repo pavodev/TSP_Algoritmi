@@ -16,7 +16,6 @@ class NearestNeighbor {
         - the totalDistance
      */
     static City[] computeNearest(List<City> citiesFromTspFile, int[][] distanceMatrix) {
-        System.out.println("\n************************* NEAREST NEIGHBOR ALGORITHM *************************");
 
         int totalDistance = 0;
 
@@ -55,8 +54,8 @@ class NearestNeighbor {
 
         totalDistance += City.getDistance(firstCity, lastCity);
 
-        System.out.println("Total distance: " + totalDistance);
-        System.out.print("******************************************************************************\n");
+//        System.out.println("Total distance: " + totalDistance);
+//        System.out.print("******************************************************************************\n");
 
         return visitedCities;
     }
