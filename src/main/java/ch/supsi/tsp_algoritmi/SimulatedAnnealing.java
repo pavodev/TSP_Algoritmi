@@ -9,23 +9,23 @@ import static ch.supsi.tsp_algoritmi.City.*;
 
 public class SimulatedAnnealing {
 
-    private int seed;
+    private long seed;
     private static Random random;
 
-    SimulatedAnnealing(int seed){
+    SimulatedAnnealing(long seed){
         this.seed = seed;
         random = new Random(seed);
     }
 
     public City[] simulatedAnnealing(City[] nearestNeighborRoute){
-        int temperature = 100;
+        int temperature = 132;
 
         City[] current = nearestNeighborRoute.clone();
         City[] best = current;
         City[] next;
         City[] candidate;
 
-        double alpha = 0.95;
+        double alpha = 0.98;
 
         long startTime = System.nanoTime();
         long elapsedTime = 0;
@@ -34,7 +34,7 @@ public class SimulatedAnnealing {
         while(elapsedTime < 178){
             for(int i = 0; i<100; i++){
 
-                next = doubleBridge(current,  543);
+                next = doubleBridge(current);
                 candidate = TwoOpt.twoOpt(next);
 
                 if(getRouteDistanceArray(candidate) < getRouteDistanceArray(current)) {
@@ -43,7 +43,7 @@ public class SimulatedAnnealing {
                         best = current;
                         System.out.println("Best Updated");
                     }
-                } else if(Math.random() < Math.exp((-((double)getRouteDistanceArray(candidate) - getRouteDistanceArray(current)))/temperature)){
+                } else if(random.nextDouble() < Math.exp((-((double)getRouteDistanceArray(candidate) - getRouteDistanceArray(current)))/temperature)){
                     current = candidate;
                 }
             }
@@ -57,7 +57,7 @@ public class SimulatedAnnealing {
         return best;
     }
 
-    public City[] doubleBridge(City[] current, int seed){
+    public City[] doubleBridge(City[] current){
         int[] randomIndexes = new int[8];
         City[] next = new City[current.length];
 
@@ -103,11 +103,11 @@ public class SimulatedAnnealing {
         return next;
     }
 
-    public int getSeed() {
+    public long getSeed() {
         return seed;
     }
 
-    public void setSeed(int seed) {
+    public void setSeed(long seed) {
         this.seed = seed;
     }
 }

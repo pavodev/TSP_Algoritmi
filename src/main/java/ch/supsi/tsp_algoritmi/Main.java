@@ -10,7 +10,7 @@ public class Main {
 
         //Read the file & load the data into a list of cities
         ClassLoader classLoader = Main.class.getClassLoader();
-        File file = new File(classLoader.getResource("lin318.tsp").getFile()) ;
+        File file = new File(classLoader.getResource("u1060.tsp").getFile()) ;
 
         List<City> cityList = TSPParser.parse(file);
 
@@ -38,7 +38,8 @@ public class Main {
          */
 
         System.out.println("TWO OPT HAS TERMINATED");
-        SimulatedAnnealing simulatedAnnealing = new SimulatedAnnealing(332353535);
+
+        SimulatedAnnealing simulatedAnnealing = new SimulatedAnnealing(346357432343546L);
 
         City[] bestRoute = simulatedAnnealing.simulatedAnnealing(nearestPlusTwoOptRoute);
 
