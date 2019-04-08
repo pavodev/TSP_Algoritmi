@@ -7,11 +7,13 @@ public class City {
     private int id;
     private double x;
     private double y;
+    private boolean look;
 
     public City(int id, double x, double y) {
         this.id = id-1;
         this.x = x;
         this.y = y;
+        this.look = false;
     }
 
     public double getX() {
@@ -20,6 +22,14 @@ public class City {
 
     public double getY() {
         return y;
+    }
+
+    public boolean isLook() {
+        return look;
+    }
+
+    public void setLook(boolean look) {
+        this.look = look;
     }
 
     public int getId() {

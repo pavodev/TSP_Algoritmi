@@ -11,9 +11,11 @@ public class SimulatedAnnealing {
 
     private long seed;
     private static Random random;
+    private LocalSearchAlgorithm localSearchAlgorithm;
 
-    SimulatedAnnealing(long seed){
+    SimulatedAnnealing(long seed, LocalSearchAlgorithm localSearchAlgorithm){
         this.seed = seed;
+        this.localSearchAlgorithm = localSearchAlgorithm;
         random = new Random(seed);
     }
 
@@ -30,12 +32,16 @@ public class SimulatedAnnealing {
         long startTime = System.nanoTime();
         long elapsedTime = 0;
 
+        int cycles = 0;
+
         //temperature > 0.1 ||
         while(elapsedTime < 178){
             for(int i = 0; i<100; i++){
 
+                cycles++;
+
                 next = doubleBridge(current);
-                candidate = TwoOpt.twoOpt(next);
+                candidate = this.localSearchAlgorithm.computeOptimization(next);
 
                 if(getRouteDistanceArray(candidate) < getRouteDistanceArray(current)) {
                     current = candidate;
@@ -53,6 +59,7 @@ public class SimulatedAnnealing {
         }
 
         System.out.println("Elapsed time: " + elapsedTime);
+        System.out.println("Number of cycles: " + cycles);
 
         return best;
     }

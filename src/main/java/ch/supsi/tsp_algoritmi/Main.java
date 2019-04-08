@@ -5,12 +5,14 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
+        //@TODO creare classe che contiene tutte le info generiche necessarie agli algoritmi
+
         System.out.println("TSP_ALGORITMI PROJECT");
         System.out.println();
 
         //Read the file & load the data into a list of cities
         ClassLoader classLoader = Main.class.getClassLoader();
-        File file = new File(classLoader.getResource("u1060.tsp").getFile()) ;
+        File file = new File(classLoader.getResource("lin318.tsp").getFile()) ;
 
         List<City> cityList = TSPParser.parse(file);
 
@@ -25,12 +27,13 @@ public class Main {
 //            System.out.print(number + " ");
 //        }
         //compute a valid route with the Nearest Neighbor algorithm:
-        City[] nearestRoute = NearestNeighbor.computeNearest(cityList, distanceMatrix);
+        City[] nearestRoute = new NearestNeighbor(cityList).compute(distanceMatrix);
 
         System.out.println("NEAREST NEIGHBOR HAS TERMINATED");
 
         //compute the 2-Opt structural algorithm to eliminate "crossed" links:
-        City[] nearestPlusTwoOptRoute = TwoOpt.twoOpt(nearestRoute);
+        TwoOpt twoOpt = new TwoOpt(distanceMatrix);
+        City[] nearestPlusTwoOptRoute = twoOpt.computeOptimization(nearestRoute);
 
         /*
         Once a valid initial route has been computed (Nearest Neighbor) and its structure improved,
@@ -39,9 +42,11 @@ public class Main {
 
         System.out.println("TWO OPT HAS TERMINATED");
 
-        SimulatedAnnealing simulatedAnnealing = new SimulatedAnnealing(346357432343546L);
+
+        SimulatedAnnealing simulatedAnnealing = new SimulatedAnnealing(1278675453865543L, twoOpt);
 
         City[] bestRoute = simulatedAnnealing.simulatedAnnealing(nearestPlusTwoOptRoute);
+        System.out.println("SIMULATED ANNEALING HAS TERMINATED");
 
         List<City> list = new ArrayList<>(Arrays.asList(bestRoute));
         Set<City> set = new HashSet<>(list);
@@ -51,8 +56,7 @@ public class Main {
         }
         //compute the Simulated Annealing algorithm to try to find the optimal solution
 
-        //show the error in percent:
-        TSPParser.printPercentError(City.getRouteDistanceArray(nearestRoute));
+        //show the error in percent
         TSPParser.printPercentError(City.getRouteDistanceArray(nearestPlusTwoOptRoute));
         TSPParser.printPercentError(City.getRouteDistanceArray(bestRoute));
     }

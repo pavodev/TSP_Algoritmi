@@ -4,22 +4,27 @@ import java.util.Arrays;
 import java.util.List;
 
 class NearestNeighbor {
+    private List<City> route;
+
+    public NearestNeighbor(List<City> route) {
+        this.route = route;
+    }
 
     /*
-    This method computes the nearest neighbor algorithm.
+        This method computes the nearest neighbor algorithm.
 
-    Parameters:
-        - A list of cities
-        - The distanceMatrix of the list of cities
+        Parameters:
+            - A list of cities
+            - The distanceMatrix of the list of cities
 
-    Returns:
-        - the totalDistance
-     */
-    static City[] computeNearest(List<City> citiesFromTspFile, int[][] distanceMatrix) {
+        Returns:
+            - the totalDistance
+         */
+    public City[] compute(int[][] distanceMatrix) {
 
         int totalDistance = 0;
 
-        City[] cities = citiesFromTspFile.toArray(new City[0]);
+        City[] cities = this.route.toArray(new City[0]);
 
         City[] visitedCities = new City[cities.length];
 

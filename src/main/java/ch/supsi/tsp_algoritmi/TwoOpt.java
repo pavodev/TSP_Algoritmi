@@ -1,96 +1,42 @@
 package ch.supsi.tsp_algoritmi;
 
+class TwoOpt implements LocalSearchAlgorithm {
+    private int[][] distanceMatrix;
 
-//public class TwoOpt {
-//
-//    private static int numberOfNodes;
-//
-//    public static int getGain(City[] tour, int i, int j) {
-//        int a = i == 0 ? tour.length - 1 : i - 1;
-//        int b = j == tour.length ? 0 : j - 1;
-//
-//        int dist1 = City.getDistance(tour[i],tour[a]) + City.getDistance(tour[j],tour[b]);
-//        int dist2 = City.getDistance(tour[i],tour[j]) + City.getDistance(tour[a],tour[b]);
-//
-//        return dist2 - dist1;
-//    }
-//
-//    public static City[] twoOpt(City[] nearestNeighborTour) {
-//
-//        numberOfNodes = nearestNeighborTour.length;
-//        int bestGain = -1;
-//        int gain;
-//        int best_i = 0;
-//        int best_j = 0;
-//
-//        City[] bestTour = nearestNeighborTour;
-//
-//        while (bestGain < 0) {
-//            bestGain = 0;
-//
-//            for (int i = 0; i < numberOfNodes; i++) {
-//                for (int j = i + 1; j < numberOfNodes; j++) {
-//                    //System.out.println("***" + i + " " + j);
-//                    gain = getGain(bestTour, i, j);
-//
-//                    if (gain < bestGain) {
-//                        bestGain = gain;
-//                        best_i = i;
-//                        best_j = j - 1;
-//                    }
-//                }
-//            }
-//            if (bestGain < 0) {
-//                bestTour = swap(bestTour, best_i, best_j);
-//            }
-//        }
-//
-//        return bestTour;
-//    }
-//
-//    public static City[] swap(City[] cities, int i, int j) {
-//
-//        int t = 0;
-//        for (int index = 0; index <= (j-i)/2; index++) {
-//            City city = cities[i+t];
-//            cities[i+t] = cities[j-t];
-//            cities[j-t] = city;
-//
-//            t++;
-//        }
-//
-//        return cities;
-//    }
-//
-//
-//}
+    public TwoOpt(int[][] distanceMatrix) {
+        this.distanceMatrix = distanceMatrix;
+    }
 
-
-class TwoOpt {
     /*
-        Compute the 2-Opt algorithm.
-    */
-    static City[] twoOpt(City[] nearestNeighbourRoute){
+            Compute the 2-Opt algorithm.
+        */
+    public City[] computeOptimization(City[] route){
 
-        City[] bestRoute = nearestNeighbourRoute;
+        City[] bestRoute = route;
 
         int bestGain = -1;
         int best_i = 0;
         int best_j = 0;
         int gain;
 
+        //boolean improved = false;
+
         while(bestGain<0){
             bestGain = 0;
-            for (int i = 0 ; i < nearestNeighbourRoute.length; i++) {
-                for (int j = i + 1; j < nearestNeighbourRoute.length; j++) {
+            for (int i = 0 ; i < route.length; i++) {
+                //if(!bestRoute[i].isLook()) {
+                for (int j = i + 1; j < route.length; j++) {
                     //check if distance AB + CD >= distance AC + BD
-                    gain=computeGain(bestRoute, i, j);
+                    gain = computeGain(bestRoute, i, j);
                     //compute the gain and update the reference variables
-                    if(gain < bestGain){
+                    if (gain < bestGain) {
+                        //improved = true;
                         bestGain = gain;
-                        best_j = j-1;
+                        best_j = j - 1;
                         best_i = i;
                     }
+                    //if (!improved)
+                    //bestRoute[i].setLook(true);
                 }
             }
             if(bestGain < 0) {
@@ -98,13 +44,17 @@ class TwoOpt {
             }
         }
 
+//        for(City city: bestRoute){
+//            city.setLook(false);
+//        }
+
         return bestRoute;
     }
 
     /*
         Swap the given i and j indexes and everything that stays between the two.
     */
-    private static void swap(City[] route, int i, int j) {
+    private void swap(City[] route, int i, int j) {
         int h = 0;
 
         for(int k = 0; k <= (j-i)/2; k++){
@@ -119,7 +69,7 @@ class TwoOpt {
     /*
         Check if the distance between 2 nodes is better if swapped and return the gain.
     */
-    private static int computeGain(City[] route, int i, int j){
+    private int computeGain(City[] route, int i, int j){
         int a;
         int b;
 
@@ -134,10 +84,21 @@ class TwoOpt {
             b = j - 1;
 
         //compute the distance without swapped indexes
-        int A = City.getDistance(route[i], route[a]) + City.getDistance(route[j], route[b]);
+        int A = this.distanceMatrix[route[i].getId()][route[a].getId()] + this.distanceMatrix[route[j].getId()][route[b].getId()];
         //Compute the distance of swapped indexes
-        int B = City.getDistance(route[i], route[j]) + City.getDistance(route[a], route[b]);
+        int B = this.distanceMatrix[route[i].getId()][route[j].getId()] + this.distanceMatrix[route[a].getId()][route[b].getId()];
 
+//        //compute the distance without swapped indexes
+//        int A1 = City.getDistance(route[i], route[a]) + City.getDistance(route[j], route[b]);
+//        //Compute the distance of swapped indexes
+//        int B1 = City.getDistance(route[i], route[j]) + City.getDistance(route[a], route[b]);
+
+//        if(B-A < 0) {
+//            route[i].setLook(false);
+//            route[j].setLook(false);
+//            route[a].setLook(false);
+//            route[b].setLook(false);
+//        }
         return  B-A;
     }
 }
