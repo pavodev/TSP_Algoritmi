@@ -5,7 +5,7 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        //@TODO creare classe che contiene tutte le info generiche necessarie agli algoritmi
+        //DA FARE:  creare classe che contiene tutte le info generiche necessarie agli algoritmi
 
         System.out.println("TSP_ALGORITMI PROJECT");
         System.out.println();
