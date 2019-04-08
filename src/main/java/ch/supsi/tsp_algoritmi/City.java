@@ -30,7 +30,7 @@ public class City {
         double x = Math.abs(city2.getX() - city1.getX());
         double y = Math.abs(city2.getY() - city1.getY());
 
-        return ((int) (Math.hypot(x, y) + 0.5));
+        return ((int) (Math.sqrt(x*x + y*y) + 0.5));
     }
 
     public static int getRouteDistance(List<City> route){
