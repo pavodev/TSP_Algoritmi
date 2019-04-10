@@ -19,34 +19,47 @@ class TwoOpt implements LocalSearchAlgorithm {
         int best_j = 0;
         int gain;
 
-        //boolean improved = false;
+        //int cycles = 0;
+
+        boolean improved = false;
 
         while(bestGain<0){
             bestGain = 0;
             for (int i = 0 ; i < route.length; i++) {
-                //if(!bestRoute[i].isLook()) {
-                for (int j = i + 1; j < route.length; j++) {
-                    //check if distance AB + CD >= distance AC + BD
-                    gain = computeGain(bestRoute, i, j);
-                    //compute the gain and update the reference variables
-                    if (gain < bestGain) {
-                        //improved = true;
-                        bestGain = gain;
-                        best_j = j - 1;
-                        best_i = i;
+                if(!bestRoute[i].isLook()) {
+                    for (int j = i + 1; j < route.length; j++) {
+                        //cycles++;
+                        //check if distance AB + CD >= distance AC + BD
+                        gain = computeGain(bestRoute, i, j);
+                        //compute the gain and update the reference variables
+                        if (gain < bestGain) {
+                            improved = true;
+                            bestGain = gain;
+                            best_j = j - 1;
+                            best_i = i;
+                        }
                     }
-                    //if (!improved)
-                    //bestRoute[i].setLook(true);
+                    if (!improved) {
+                        //System.out.println(i);
+                        bestRoute[i].setLook(true);
+                    }
+
+                    //improved = false;
                 }
+                //System.out.println(cycles);
+                //cycles = 0;
             }
             if(bestGain < 0) {
                 swap(bestRoute, best_i, best_j);
             }
+
         }
 
-//        for(City city: bestRoute){
-//            city.setLook(false);
-//        }
+        for(City city: bestRoute){
+            city.setLook(false);
+        }
+
+
 
         return bestRoute;
     }
@@ -93,12 +106,13 @@ class TwoOpt implements LocalSearchAlgorithm {
 //        //Compute the distance of swapped indexes
 //        int B1 = City.getDistance(route[i], route[j]) + City.getDistance(route[a], route[b]);
 
-//        if(B-A < 0) {
-//            route[i].setLook(false);
-//            route[j].setLook(false);
-//            route[a].setLook(false);
-//            route[b].setLook(false);
-//        }
+        if(B-A < 0) {
+            route[i].setLook(false);
+            route[j].setLook(false);
+            route[a].setLook(false);
+            route[b].setLook(false);
+        }
+
         return  B-A;
     }
 }

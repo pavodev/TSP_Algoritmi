@@ -10,35 +10,38 @@ import static ch.supsi.tsp_algoritmi.City.*;
 public class SimulatedAnnealing {
 
     private long seed;
+    private long elapsedTime;
+    private double alpha;
+    private int temperature;
     private static Random random;
     private LocalSearchAlgorithm localSearchAlgorithm;
 
     SimulatedAnnealing(long seed, LocalSearchAlgorithm localSearchAlgorithm){
         this.seed = seed;
+        this.elapsedTime = 0;
+        this.alpha = 0;
+        this.temperature = 0;
         this.localSearchAlgorithm = localSearchAlgorithm;
         random = new Random(seed);
     }
 
     public City[] simulatedAnnealing(City[] nearestNeighborRoute){
-        int temperature = 132;
+        int temperature = random.nextInt(50) + 100;
+        double alpha = random.nextDouble()*(0.9999999 - 0.900000) + 0.900000;
+
+        this.temperature = temperature;
+        this.alpha = alpha;
 
         City[] current = nearestNeighborRoute.clone();
         City[] best = current;
         City[] next;
         City[] candidate;
 
-        double alpha = 0.98;
-
         long startTime = System.nanoTime();
         long elapsedTime = 0;
 
-        int cycles = 0;
-
-        //temperature > 0.1 ||
         while(elapsedTime < 178){
             for(int i = 0; i<100; i++){
-
-                cycles++;
 
                 next = doubleBridge(current);
                 candidate = this.localSearchAlgorithm.computeOptimization(next);
@@ -47,7 +50,7 @@ public class SimulatedAnnealing {
                     current = candidate;
                     if (getRouteDistanceArray(current) < getRouteDistanceArray(best)) {
                         best = current;
-                        System.out.println("Best Updated");
+                        //System.out.println("Best Updated");
                     }
                 } else if(random.nextDouble() < Math.exp((-((double)getRouteDistanceArray(candidate) - getRouteDistanceArray(current)))/temperature)){
                     current = candidate;
@@ -58,8 +61,8 @@ public class SimulatedAnnealing {
             temperature *= alpha;
         }
 
+        this.elapsedTime = elapsedTime;
         System.out.println("Elapsed time: " + elapsedTime);
-        System.out.println("Number of cycles: " + cycles);
 
         return best;
     }
@@ -116,5 +119,17 @@ public class SimulatedAnnealing {
 
     public void setSeed(long seed) {
         this.seed = seed;
+    }
+
+    public long getElapsedTime() {
+        return elapsedTime;
+    }
+
+    public double getAlpha() {
+        return alpha;
+    }
+
+    public int getTemperature() {
+        return temperature;
     }
 }

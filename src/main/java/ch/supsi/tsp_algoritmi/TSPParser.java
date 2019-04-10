@@ -5,11 +5,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TSPParser {
-    private static double bestKnown;
+    private File tspFile;
+    private int bestKnown;
+    private String fileName;
 
-    public static List<City> parse(File tspFile) {
-        if(tspFile == null)
-            return null;
+    public TSPParser(File tspFile) {
+        if(tspFile == null || tspFile.getName().split("tsp").length < 1)
+            throw new NullPointerException("INVALID TSP FILE");
+
+        this.tspFile = tspFile;
+        this.bestKnown = Integer.MAX_VALUE;
+        this.fileName = tspFile.getName();
+    }
+
+    public List<City> parse() {
 
         System.out.println(tspFile.getName());
         List<City> cities = new ArrayList<>();
@@ -17,7 +26,7 @@ public class TSPParser {
         try {
             String regex = "^\\s+";
 
-            BufferedReader in = new BufferedReader(new FileReader(tspFile));
+            BufferedReader in = new BufferedReader(new FileReader(this.tspFile));
             String line;
             line = in.readLine();
 
@@ -25,7 +34,7 @@ public class TSPParser {
                 line = in.readLine();
             }
 
-            bestKnown = Double.parseDouble(line.split(" ")[2]);
+            this.bestKnown = Integer.parseInt(line.split(" ")[2]);
             System.out.println("Best known: " + bestKnown);
 
             while(!(line.split(" ")[0].equals("1"))){
@@ -46,8 +55,6 @@ public class TSPParser {
                 line = in.readLine();
             }
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -55,9 +62,15 @@ public class TSPParser {
         return cities;
     }
 
-    public static void printPercentError(double computedDistance){
-        double error = (Math.abs(bestKnown-computedDistance)/bestKnown) * 100.0;
+    public double getPercentError(double computedDistance){
+        return (Math.abs(this.bestKnown-computedDistance)/this.bestKnown) * 100.0;
+    }
 
-        System.out.println("Error(%): " + error);
+    public String getFileName() {
+        return fileName;
+    }
+
+    public int getBestKnown() {
+        return bestKnown;
     }
 }
