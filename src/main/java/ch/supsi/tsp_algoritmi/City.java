@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class City {
+public class City{
     private int id;
     private double x;
     private double y;
-    private List<City> candidateList;
+    private List<Integer> candidateList;
 
     public City(int id, double x, double y) {
         this.id = id-1;
@@ -25,7 +25,7 @@ public class City {
         return y;
     }
 
-    public List<City> getCandidateList() {
+    public List<Integer> getCandidateList() {
         return candidateList;
     }
 

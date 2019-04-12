@@ -12,7 +12,7 @@ public class Main {
         System.out.println("TSP_ALGORITMI PROJECT");
         System.out.println();
 
-        //Read the file & load the data into a list of cities
+        //Parse the file & load the data into a list of cities
         ClassLoader classLoader = Main.class.getClassLoader();
         File file = new File(classLoader.getResource("rat783.tsp").getFile()) ;
 
@@ -21,6 +21,15 @@ public class Main {
 
         //compute the distanceMatrix;
         int[][] distanceMatrix = City.getDistanceMatrix(cityList);
+
+        City[] cities = cityList.toArray(new City[0]);
+
+        MinimumSpanningTree minimumSpanningTree = new MinimumSpanningTree(distanceMatrix);
+        minimumSpanningTree.compute(cities);
+
+        for(City city: cities){
+            System.out.print(city.getCandidateList().size() + " ");
+        }
 
         /*
             compute a valid route with the Nearest Neighbor algorithm:

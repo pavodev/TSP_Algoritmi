@@ -20,10 +20,13 @@ public class MinimumSpanningTree {
         until all cities have been included into the Minimum Spanning Tree.
      */
     public void compute(City[] cities){
-        List<City> list = new ArrayList<>(Arrays.asList(cities));
 
-        TreeSet<City> mstNodes = new TreeSet<>();
-        TreeSet<City> notYetMst = new TreeSet<>(list);
+        TreeSet<Integer> mstNodes = new TreeSet<>();
+        TreeSet<Integer> notYetMst = new TreeSet<>();
+
+        for(int i = 0; i < cities.length; i++){
+            notYetMst.add(i);
+        }
 
         findShortestEdgeInList(cities, mstNodes, notYetMst);
 
@@ -38,51 +41,51 @@ public class MinimumSpanningTree {
         This method finds the first 2 nodes(cities) to be included into the minimum spanning tree by using distance
         criteria.
      */
-    private void findShortestEdgeInList(City[] cities, TreeSet<City> mstNodes, TreeSet<City> notYetMst){
+    private void findShortestEdgeInList(City[] cities, TreeSet<Integer> mstNodes, TreeSet<Integer> notYetMst){
         int shortestEdge = Integer.MAX_VALUE;
         int nodeA = 0;
         int nodeB = 0;
         int distance;
 
         for(int i = 0; i<cities.length; i++) {
-            for (int j = 0; j < cities.length; j++) {
+            for (int j = i + 1; j < cities.length; j++) {
                 distance = distanceMatrix[cities[i].getId()][cities[j].getId()];
                 if (distance < shortestEdge) {
-                    nodeA = i;
-                    nodeB = j;
+                    nodeA = cities[i].getId();
+                    nodeB = cities[j].getId();
 
                     shortestEdge = distance;
                 }
             }
         }
 
-        mstNodes.add(cities[nodeA]);
-        mstNodes.add(cities[nodeB]);
+        mstNodes.add(cities[nodeA].getId());
+        mstNodes.add(cities[nodeB].getId());
 
-        notYetMst.remove(cities[nodeA]);
-        notYetMst.remove(cities[nodeB]);
+        notYetMst.remove(cities[nodeA].getId());
+        notYetMst.remove(cities[nodeB].getId());
 
-        cities[nodeA].getCandidateList().add(cities[nodeB]);
-        cities[nodeB].getCandidateList().add(cities[nodeA]);
+        cities[nodeA].getCandidateList().add(nodeB);
+        cities[nodeB].getCandidateList().add(nodeA);
     }
 
     /*
         Computes one iteration of the algorithm: searches for the shortest edge and updates the candidate lists of the
         chosen nodes.
      */
-    private void nextEdge(City[] cities, TreeSet<City> mstNodes, TreeSet<City> notYetMst) {
+    private void nextEdge(City[] cities, TreeSet<Integer> mstNodes, TreeSet<Integer> notYetMst) {
         int shortestEdge = Integer.MAX_VALUE;
 
         int nodeA = 0;
-        City nodeB = null;
+        int nodeB = 0;
 
         int distance = 0;
 
         for (int i = 0; i < mstNodes.size(); i++){
-            for(City city: notYetMst){
-                distance = distanceMatrix[cities[i].getId()][city.getId()];
+            for(int city: notYetMst){
+                distance = distanceMatrix[cities[i].getId()][city];
                 if (distance < shortestEdge) {
-                    nodeA = i;
+                    nodeA = cities[i].getId();
                     nodeB = city;
 
                     shortestEdge = distance;
@@ -94,6 +97,6 @@ public class MinimumSpanningTree {
         notYetMst.remove(nodeB);
 
         cities[nodeA].getCandidateList().add(nodeB);
-        nodeB.getCandidateList().add(cities[nodeA]);
+        cities[nodeB].getCandidateList().add(nodeA);
     }
 }
