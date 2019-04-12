@@ -1,5 +1,6 @@
 package ch.supsi.tsp_algoritmi;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -7,13 +8,13 @@ public class City {
     private int id;
     private double x;
     private double y;
-    private boolean look;
+    private List<City> candidateList;
 
     public City(int id, double x, double y) {
         this.id = id-1;
         this.x = x;
         this.y = y;
-        this.look = false;
+        this.candidateList = new ArrayList<>();
     }
 
     public double getX() {
@@ -24,12 +25,8 @@ public class City {
         return y;
     }
 
-    public boolean isLook() {
-        return look;
-    }
-
-    public void setLook(boolean look) {
-        this.look = look;
+    public List<City> getCandidateList() {
+        return candidateList;
     }
 
     public int getId() {
