@@ -14,7 +14,7 @@ public class Main {
 
         //Parse the file & load the data into a list of cities
         ClassLoader classLoader = Main.class.getClassLoader();
-        File file = new File(classLoader.getResource("rat783.tsp").getFile()) ;
+        File file = new File(classLoader.getResource("ch130.tsp").getFile()) ;
 
         TSPParser tspParser = new TSPParser(file);
         List<City> cityList = tspParser.parse();
@@ -24,11 +24,15 @@ public class Main {
 
         City[] cities = cityList.toArray(new City[0]);
 
+        CandidateListPopulator candidateListPopulator = new CandidateListPopulator(distanceMatrix);
+        candidateListPopulator.populateCandidateLists(cities);
+
         MinimumSpanningTree minimumSpanningTree = new MinimumSpanningTree(distanceMatrix);
         minimumSpanningTree.compute(cities);
 
-        for(City city: cities){
-            System.out.print(city.getCandidateList().size() + " ");
+        System.out.println();
+        for(int city: cities[0].getCandidateList()){
+            System.out.println(city);
         }
 
         /*

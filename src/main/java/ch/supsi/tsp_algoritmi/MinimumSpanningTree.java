@@ -65,8 +65,11 @@ public class MinimumSpanningTree {
         notYetMst.remove(cities[nodeA].getId());
         notYetMst.remove(cities[nodeB].getId());
 
-        cities[nodeA].getCandidateList().add(nodeB);
-        cities[nodeB].getCandidateList().add(nodeA);
+        if(!cities[nodeA].getCandidateList().contains(nodeB))
+            cities[nodeA].getCandidateList().add(nodeB);
+
+        if(!cities[nodeB].getCandidateList().contains(nodeA))
+            cities[nodeB].getCandidateList().add(nodeA);
     }
 
     /*
@@ -81,12 +84,12 @@ public class MinimumSpanningTree {
 
         int distance = 0;
 
-        for (int i = 0; i < mstNodes.size(); i++){
-            for(int city: notYetMst){
-                distance = distanceMatrix[cities[i].getId()][city];
+        for (int cityA: mstNodes){
+            for(int cityB: notYetMst){
+                distance = distanceMatrix[cityA][cityB];
                 if (distance < shortestEdge) {
-                    nodeA = cities[i].getId();
-                    nodeB = city;
+                    nodeA = cityA;
+                    nodeB = cityB;
 
                     shortestEdge = distance;
                 }
@@ -96,7 +99,12 @@ public class MinimumSpanningTree {
         mstNodes.add(nodeB);
         notYetMst.remove(nodeB);
 
-        cities[nodeA].getCandidateList().add(nodeB);
-        cities[nodeB].getCandidateList().add(nodeA);
+        if(!cities[nodeA].getCandidateList().contains(nodeB))
+            cities[nodeA].getCandidateList().add(nodeB);
+
+        if(!cities[nodeB].getCandidateList().contains(nodeA))
+            cities[nodeB].getCandidateList().add(nodeA);
+//        cities[nodeA].getCandidateList().add(nodeB);
+//        cities[nodeB].getCandidateList().add(nodeA);
     }
 }
