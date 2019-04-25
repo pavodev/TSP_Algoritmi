@@ -2,6 +2,7 @@ package ch.supsi.tsp_algoritmi;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
     private static final String FILENAME = "/Users/pavo/Documents/Scuola/SUPSI/3_Anno/6_Semestre/Algoritmi_avanzati/TSP_Algoritmi/results.txt";
@@ -12,54 +13,6 @@ public class Main {
         System.out.println("TSP_ALGORITMI PROJECT");
         System.out.println();
 
-        //Parse the file & load the data into a list of cities
-        ClassLoader classLoader = Main.class.getClassLoader();
-        File file = new File(classLoader.getResource("ch130.tsp").getFile()) ;
-
-        TSPParser tspParser = new TSPParser(file);
-        List<City> cityList = tspParser.parse();
-
-        //compute the distanceMatrix;
-        int[][] distanceMatrix = City.getDistanceMatrix(cityList);
-
-        City[] cities = cityList.toArray(new City[0]);
-
-        CandidateListPopulator candidateListPopulator = new CandidateListPopulator(distanceMatrix);
-        candidateListPopulator.populateCandidateLists(cities);
-
-        MinimumSpanningTree minimumSpanningTree = new MinimumSpanningTree(distanceMatrix);
-        minimumSpanningTree.compute(cities);
-
-        System.out.println();
-        for(int city: cities[0].getCandidateList()){
-            System.out.println(city);
-        }
-
-        /*
-            compute a valid route with the Nearest Neighbor algorithm:
-         */
-        City[] nearestRoute = new NearestNeighbor(cityList).compute(distanceMatrix);
-        System.out.println("NEAREST NEIGHBOR HAS TERMINATED -> "+tspParser.getPercentError(City.getRouteDistanceArray(nearestRoute))+"%");
-
-        /*
-            compute the 2-Opt structural algorithm to eliminate "crossed" links:
-         */
-        TwoOpt twoOpt = new TwoOpt(distanceMatrix);
-        City[] nearestPlusTwoOptRoute = twoOpt.computeOptimization(nearestRoute);
-        System.out.println(tspParser.getPercentError(City.getRouteDistanceArray(nearestPlusTwoOptRoute)));
-        System.out.println("TWO OPT HAS TERMINATED -> "+tspParser.getPercentError(City.getRouteDistanceArray(nearestRoute))+"%");
-
-        /*
-            Once a valid initial route has been computed (Nearest Neighbor) and its structure improved with a optimizer,
-            apply the Simulated Annealing algorithm.
-         */
-        int counter = 0;
-
-        long currentBestSeed = 0;
-        double currentBestError = 100.0;
-        double currentBestAlpha = 0;
-        int currentBestTemperature = 0;
-
         FileWriter fileWriter;
         try {
             fileWriter = new FileWriter(FILENAME, true);
@@ -68,10 +21,72 @@ public class Main {
             printWriter.write("Line Added on: " + new java.util.Date()+"\n\n");
             printWriter.flush();
 
-            while (counter < 50) {
+            int counter = 0;
+            long currentBestSeed = 0;
+            double currentBestError = 100.0;
+            double currentBestAlpha = 0;
+            int currentBestTemperature = 0;
+
+            while (counter < 150) {
+
+                long start = System.nanoTime();
+
+                //Parse the file & load the data into a list of cities
+                ClassLoader classLoader = Main.class.getClassLoader();
+                File file = new File(classLoader.getResource("fl1577.tsp").getFile()) ;
+
+                TSPParser tspParser = new TSPParser(file);
+                List<City> cityList = tspParser.parse();
+
+                //compute the distanceMatrix;
+                int[][] distanceMatrix = City.getDistanceMatrix(cityList);
+
+                City[] cities = cityList.toArray(new City[0]);
+
+                CandidateListPopulator candidateListPopulator = new CandidateListPopulator(distanceMatrix);
+                candidateListPopulator.populateCandidateLists(cities);
+
+                MinimumSpanningTree minimumSpanningTree = new MinimumSpanningTree(distanceMatrix);
+                minimumSpanningTree.compute(cities);
+
+        /*
+            compute a valid route with the Nearest Neighbor algorithm:
+         */
+                City[] nearestRoute = new NearestNeighbor(cityList).compute(distanceMatrix);
+//        System.out.println("NEAREST NEIGHBOR HAS TERMINATED -> "+tspParser.getPercentError(City.getRouteDistanceArray(nearestRoute))+"%");
+
+                //ResultWriter.writeResults("fl1577", nearestRoute);
+
+                int[] positions = new int[nearestRoute.length];
+
+                for(int x = 0; x < nearestRoute.length; x++){
+                    for (int y = 0; y < nearestRoute.length; y++) {
+                        if(x == nearestRoute[y].getId()){
+                            positions[x] = y;
+                            break;
+                        }
+                    }
+                }
+
+        /*
+            compute the 2-Opt structural algorithm to eliminate "crossed" links:
+         */
+                TwoOpt twoOpt = new TwoOpt(distanceMatrix, positions);
+                City[] nearestPlusTwoOptRoute = twoOpt.computeOptimization(nearestRoute);
+
+//        System.out.println(tspParser.getPercentError(City.getRouteDistanceArray(nearestPlusTwoOptRoute)));
+//        System.out.println("TWO OPT HAS TERMINATED -> "+tspParser.getPercentError(City.getRouteDistanceArray(nearestRoute))+"%");
+
+        /*
+            Once a valid initial route has been computed (Nearest Neighbor) and its structure improved with a optimizer,
+            apply the Simulated Annealing algorithm.
+         */
                 long seed = System.currentTimeMillis();
 
-                SimulatedAnnealing simulatedAnnealing = new SimulatedAnnealing(seed, twoOpt);
+                long elapsed = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - start);
+
+
+                SimulatedAnnealing simulatedAnnealing = new SimulatedAnnealing(seed, twoOpt, positions, elapsed);
                 City[] bestRoute = simulatedAnnealing.simulatedAnnealing(nearestPlusTwoOptRoute);
                 double error = tspParser.getPercentError(City.getRouteDistanceArray(bestRoute));
                 System.out.println("SIMULATED ANNEALING HAS TERMINATED -> " + error + "%");
@@ -102,20 +117,24 @@ public class Main {
 
                 System.out.println();
                 System.out.println();
+
+                //ResultWriter.writeResults("u1060", bestRoute);
+
                 counter++;
             }
 
             printWriter.close();
 
+
+
+            System.out.println();
+            System.out.println();
+            System.out.println(currentBestSeed + " / " + currentBestError + "% / " + currentBestAlpha + " / " + currentBestTemperature);
+            //compute the Simulated Annealing algorithm to try to find the optimal solution
+            //show the error in percent
         } catch (IOException e) {
             System.err.println("Error while writing to file: " +
                     e.getMessage());
         }
-
-        System.out.println();
-        System.out.println();
-        System.out.println(currentBestSeed + " / " + currentBestError + "% / " + currentBestAlpha + " / " + currentBestTemperature);
-        //compute the Simulated Annealing algorithm to try to find the optimal solution
-        //show the error in percent
     }
 }

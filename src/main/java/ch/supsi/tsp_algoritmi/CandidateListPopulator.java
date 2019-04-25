@@ -1,8 +1,6 @@
 package ch.supsi.tsp_algoritmi;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CandidateListPopulator {
@@ -14,8 +12,33 @@ public class CandidateListPopulator {
 
     public void populateCandidateLists(City[] cities){
         int[][] distances = distanceMatrix.clone();
+        List<Integer> toBeAdded = new ArrayList<>();
 
         Map<Integer, Integer> distancesForCity = new HashMap<>();
+
+//        for(int k=0; k<cities.length; k++){
+//            for (int i = 0; i < 15; i++) {
+//                int best = Integer.MAX_VALUE;
+//                int currentIndex = -1;
+//                for (int j = 0; j < cities.length; j++) {
+//                    if (distances[k][j] > 0 && distances[k][j] < best && !toBeAdded.contains(j)) {
+//                        currentIndex = j;
+//                        best = distances[k][j];
+//                    }
+//                }
+//                toBeAdded.add(currentIndex);
+//            }
+//
+//            for(int i: toBeAdded){
+//                cities[k].getCandidateList().add(i);
+//            }
+//
+//            toBeAdded.clear();
+//        }
+
+
+
+        System.out.println();
 
         for(int i = 0; i<cities.length; i++){
             for(int j = 0; j < cities.length; j++) {
@@ -34,11 +57,15 @@ public class CandidateListPopulator {
                 if(count >= 15)
                     break;
 
-                if(sortedByCount.get(city) != 0 && !cities[i].getCandidateList().contains(city)){
-                    cities[i].getCandidateList().add(city);
-                    count++;
+                if(sortedByCount.get(city) != 0){
+                    if(cities[i].getCandidateList().add(city))
+                        count++;
                 }
             }
         }
+
+
+
+//        System.out.println();
     }
 }

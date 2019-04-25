@@ -1,20 +1,18 @@
 package ch.supsi.tsp_algoritmi;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class City{
     private int id;
     private double x;
     private double y;
-    private List<Integer> candidateList;
+    private Set<Integer> candidateList;
 
     public City(int id, double x, double y) {
         this.id = id-1;
         this.x = x;
         this.y = y;
-        this.candidateList = new ArrayList<>();
+        this.candidateList = new TreeSet<>();
     }
 
     public double getX() {
@@ -25,7 +23,7 @@ public class City{
         return y;
     }
 
-    public List<Integer> getCandidateList() {
+    public Set<Integer> getCandidateList() {
         return candidateList;
     }
 

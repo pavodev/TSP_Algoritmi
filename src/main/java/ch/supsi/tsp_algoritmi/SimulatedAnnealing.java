@@ -13,16 +13,20 @@ public class SimulatedAnnealing {
     private long elapsedTime;
     private double alpha;
     private int temperature;
+    private long alreadyElapsed;
     private static Random random;
     private LocalSearchAlgorithm localSearchAlgorithm;
+    private int[] positions;
 
-    SimulatedAnnealing(long seed, LocalSearchAlgorithm localSearchAlgorithm){
+    SimulatedAnnealing(long seed, LocalSearchAlgorithm localSearchAlgorithm, int[] positions, long alreadyElapsed){
         this.seed = seed;
         this.elapsedTime = 0;
         this.alpha = 0;
         this.temperature = 0;
         this.localSearchAlgorithm = localSearchAlgorithm;
         random = new Random(seed);
+        this.positions = positions;
+        this.alreadyElapsed = alreadyElapsed;
     }
 
     public City[] simulatedAnnealing(City[] nearestNeighborRoute){
@@ -38,11 +42,13 @@ public class SimulatedAnnealing {
         City[] candidate;
 
         long startTime = System.nanoTime();
-        long elapsedTime = 0;
+        long elapsedSimTime = 0;
 
-        while(elapsedTime < 178){
+        int count = 0;
+
+        while(elapsedSimTime < 178-alreadyElapsed){
             for(int i = 0; i<100; i++){
-
+                count++;
                 next = doubleBridge(current);
                 candidate = this.localSearchAlgorithm.computeOptimization(next);
 
@@ -50,19 +56,20 @@ public class SimulatedAnnealing {
                     current = candidate;
                     if (getRouteDistanceArray(current) < getRouteDistanceArray(best)) {
                         best = current;
-                        //System.out.println("Best Updated");
                     }
                 } else if(random.nextDouble() < Math.exp((-((double)getRouteDistanceArray(candidate) - getRouteDistanceArray(current)))/temperature)){
                     current = candidate;
                 }
             }
 
-            elapsedTime = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - startTime);
+            elapsedSimTime = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - startTime);
             temperature *= alpha;
         }
 
-        this.elapsedTime = elapsedTime;
-        System.out.println("Elapsed time: " + elapsedTime);
+        System.out.println("count" + count);
+
+        this.elapsedTime = elapsedSimTime + alreadyElapsed;
+        System.out.println("Elapsed time: " + this.elapsedTime);
 
         return best;
     }
@@ -109,6 +116,10 @@ public class SimulatedAnnealing {
         System.arraycopy(current, bplus, next, aplus + (d-cplus + 1), c-bplus + 1);
         System.arraycopy(current, aplus, next, aplus + (d-cplus + 1) + (c-bplus + 1), b-aplus + 1);
         System.arraycopy(current, dplus, next, aplus + (d-cplus + 1) + (c-bplus + 1) + (b-aplus + 1), next.length-1-dplus+1);
+
+        for(int x = 0; x < current.length; x++){
+            positions[current[x].getId()] = x;
+        }
 
         return next;
     }
