@@ -21,7 +21,7 @@ public class ResultWriter{
         sb.append("-1\n");
         sb.append("EOF\n");
         try {
-            File file = new File("./TSP_Algoritmi/src/main/resources/"+filename+".opt.tour");
+            File file = new File("./src/main/resources/"+filename+".opt.tour");
             file.createNewFile();
             FileWriter fileWriter = new FileWriter(file);
             fileWriter.write(sb.toString());

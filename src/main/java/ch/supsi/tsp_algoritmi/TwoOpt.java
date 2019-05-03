@@ -10,21 +10,19 @@ class TwoOpt implements LocalSearchAlgorithm {
     }
 
     /*
-            Compute the 2-Opt algorithm.
-        */
+        Compute the 2-Opt algorithm.
+    */
     public City[] computeOptimization(City[] route){
-
-        //City[] bestRoute = route;
 
         int bestGain = -1;
         int best_i = 0;
         int best_j = 0;
         int gain;
-        int count = 0;
 
         while(bestGain<0){
             bestGain = 0;
             for (int i = 0; i < route.length; i++) {
+
                 int a = i;
                 int b;
 
@@ -34,10 +32,8 @@ class TwoOpt implements LocalSearchAlgorithm {
                     b=0;
                 }
 
-                //int b = (route.length + i + 1) % route.length;
-
                 for (int city: route[i].getCandidateList()) {
-                    //compute the gain and update the reference variables
+
                     int c =  positions[city];
                     int d;
 
@@ -47,7 +43,6 @@ class TwoOpt implements LocalSearchAlgorithm {
                         d=0;
                     }
 
-                    //int d = (c + 1) % route.length;
                     if(a==c || b==c || d==a)
                         continue;
 
@@ -57,19 +52,13 @@ class TwoOpt implements LocalSearchAlgorithm {
                         bestGain = gain;
                         best_i = a;
                         best_j = c;
-                        //System.out.println(a + " " + c);
                     }
                 }
             }
             if(bestGain < 0) {
-                //System.out.println(best_i + " " + best_j);
-                //count++;
                 optimalSwap(route, best_i, best_j);
             }
         }
-
-        //System.out.println(count);
-
         return route;
     }
 
@@ -108,14 +97,13 @@ class TwoOpt implements LocalSearchAlgorithm {
         for (int k = 0; k < dimension; k++) {
             City tmp = cities[leftSide];
             cities[leftSide] = cities[rightSide];
-            //positions[cities[leftSide].getId()] = rightSide;
             cities[rightSide] = tmp;
-            //positions[cities[rightSide].getId()] = leftSide;
 
             leftSide = (leftSide + 1) % cities.length;
             rightSide = (cities.length + rightSide - 1) % cities.length;
         }
 
+        //Update the positions support array
         for(int x = 0; x < cities.length; x++){
             positions[cities[x].getId()] = x;
         }

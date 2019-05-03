@@ -19,8 +19,6 @@ public class TSPParser {
     }
 
     public List<City> parse() {
-
-        System.out.println(tspFile.getName());
         List<City> cities = new ArrayList<>();
 
         try {
@@ -35,7 +33,7 @@ public class TSPParser {
             }
 
             this.bestKnown = Integer.parseInt(line.split(" ")[2]);
-            System.out.println("Best known: " + bestKnown);
+            System.out.println("Best known: " + this.bestKnown);
 
             while(!(line.split(" ")[0].equals("1"))){
                 line = in.readLine();

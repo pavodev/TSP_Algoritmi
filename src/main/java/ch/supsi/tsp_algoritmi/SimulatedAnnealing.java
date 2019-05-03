@@ -44,11 +44,8 @@ public class SimulatedAnnealing {
         long startTime = System.nanoTime();
         long elapsedSimTime = 0;
 
-        int count = 0;
-
         while(elapsedSimTime < 178-alreadyElapsed){
             for(int i = 0; i<100; i++){
-                count++;
                 next = doubleBridge(current);
                 candidate = this.localSearchAlgorithm.computeOptimization(next);
 
@@ -66,10 +63,7 @@ public class SimulatedAnnealing {
             temperature *= alpha;
         }
 
-        System.out.println("count" + count);
-
         this.elapsedTime = elapsedSimTime + alreadyElapsed;
-        System.out.println("Elapsed time: " + this.elapsedTime);
 
         return best;
     }

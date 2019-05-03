@@ -16,30 +16,6 @@ public class CandidateListPopulator {
 
         Map<Integer, Integer> distancesForCity = new HashMap<>();
 
-//        for(int k=0; k<cities.length; k++){
-//            for (int i = 0; i < 15; i++) {
-//                int best = Integer.MAX_VALUE;
-//                int currentIndex = -1;
-//                for (int j = 0; j < cities.length; j++) {
-//                    if (distances[k][j] > 0 && distances[k][j] < best && !toBeAdded.contains(j)) {
-//                        currentIndex = j;
-//                        best = distances[k][j];
-//                    }
-//                }
-//                toBeAdded.add(currentIndex);
-//            }
-//
-//            for(int i: toBeAdded){
-//                cities[k].getCandidateList().add(i);
-//            }
-//
-//            toBeAdded.clear();
-//        }
-
-
-
-        System.out.println();
-
         for(int i = 0; i<cities.length; i++){
             for(int j = 0; j < cities.length; j++) {
                 distancesForCity.put(j, distances[i][j]);

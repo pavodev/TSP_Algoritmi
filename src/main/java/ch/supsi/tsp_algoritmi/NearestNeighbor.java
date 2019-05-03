@@ -53,15 +53,6 @@ class NearestNeighbor {
             visitedCities[index] = cities[current]; //add the nearest city to the visited list
         }
 
-        //add the final distance between the start city and the last city to complete the cycle
-        City firstCity = visitedCities[0];
-        City lastCity = visitedCities[cities.length-1];
-
-        totalDistance += City.getDistance(firstCity, lastCity);
-
-//        System.out.println("Total distance: " + totalDistance);
-//        System.out.print("******************************************************************************\n");
-
         return visitedCities;
     }
 

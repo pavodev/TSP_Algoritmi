@@ -98,7 +98,5 @@ public class MinimumSpanningTree {
 
         cities[nodeA].getCandidateList().add(nodeB);
         cities[nodeB].getCandidateList().add(nodeA);
-//        cities[nodeA].getCandidateList().add(nodeB);
-//        cities[nodeB].getCandidateList().add(nodeA);
     }
 }
